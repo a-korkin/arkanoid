@@ -1,29 +1,21 @@
-#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
+#include <SDL2/SDL_timer.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include "./game.h"
 #include "./paddle.h"
 
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_events.h>
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool running = false;
+int last_frame_time = 0;
 Paddle paddle;
-
-void create_paddle(void) {
-    paddle.w = 50;
-    paddle.h = 10;
-    paddle.position.x = SCREEN_WIDTH / 2;
-    paddle.position.y = SCREEN_HEIGHT - 20;
-    paddle.color.r = 0x00;
-    paddle.color.g = 0xFF;
-    paddle.color.b = 0x00;
-    paddle.color.a = 0xFF;
-}
 
 void init(void) {
     running = true;
@@ -49,7 +41,7 @@ void init(void) {
         fprintf(stderr, "Error creating renderer: %s", SDL_GetError());
         running = false;
     }
-    create_paddle();
+    create_paddle(&paddle, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void handle_input(void) {
@@ -59,9 +51,22 @@ void handle_input(void) {
     if (event.type == SDL_QUIT) {
         running = false;
     }
+    if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.sym) {
+            case SDLK_RIGHT: paddle.position.x += PADDLE_STEP; break;
+            case SDLK_LEFT: paddle.position.x -= PADDLE_STEP; break;
+        }
+    }
 }
 
 void update(void) {
+    int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - last_frame_time);
+    if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
+        SDL_Delay(time_to_wait);
+    }
+    float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
+    last_frame_time = SDL_GetTicks();
+    update_paddle(&paddle, SCREEN_WIDTH);
 }
 
 void render(void) {

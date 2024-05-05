@@ -5,8 +5,24 @@
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
 
-void update_paddle(float delta_time) {
+void create_paddle(Paddle *paddle, int w, int h) {
+    paddle->w = 100;
+    paddle->h = 10;
+    paddle->position.x = w / 2;
+    paddle->position.y = h - 20;
+    paddle->color.r = 0x00;
+    paddle->color.g = 0x00;
+    paddle->color.b = 0xFF;
+    paddle->color.a = 0xFF;
+}
 
+void update_paddle(Paddle *paddle, int w) {
+    if (paddle->position.x <= 0) {
+        paddle->position.x = 0;
+    }
+    if (paddle->position.x + paddle->w >= w) {
+        paddle->position.x = w - paddle->w;
+    }
 }
 
 void render_paddle(SDL_Renderer *renderer, Paddle *paddle) {
