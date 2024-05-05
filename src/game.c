@@ -14,6 +14,7 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool running = false;
+bool start = false;
 int last_frame_time = 0;
 Paddle paddle;
 Ball ball;
@@ -57,6 +58,17 @@ void handle_input(void) {
         switch (event.key.keysym.sym) {
             case SDLK_RIGHT: paddle.position.x += PADDLE_STEP; break;
             case SDLK_LEFT: paddle.position.x -= PADDLE_STEP; break;
+            case SDLK_SPACE: ball.direction.y = -1; start = true; break;
+        }
+    }
+}
+
+void check_collisions(void) {
+    if (ball.position.y + ball.size >= paddle.position.y
+        && ball.position.x >= paddle.position.x
+        && ball.position.x + ball.size <= paddle.position.x + paddle.w) {
+        if (start) {
+            ball.direction.y *= -1;
         }
     }
 }
@@ -69,6 +81,8 @@ void update(void) {
     float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
     last_frame_time = SDL_GetTicks();
     update_paddle(&paddle, SCREEN_WIDTH);
+    update_ball(&ball, SCREEN_WIDTH, SCREEN_HEIGHT, delta_time);
+    check_collisions();
 }
 
 void render(void) {

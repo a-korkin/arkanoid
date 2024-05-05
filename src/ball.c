@@ -12,7 +12,22 @@ void create_ball(Ball *ball, int w, int h) {
     ball->color.b = 0x00;
     ball->color.a = 0xFF;
 }
-void update_ball(Ball *ball) {}
+void update_ball(Ball *ball, int w, int h, float delta_time) {
+    ball->position.x += BALL_SPEED * ball->direction.x * delta_time;
+    ball->position.y += BALL_SPEED * ball->direction.y * delta_time;
+    if (ball->position.x + ball->size >= w) {
+        ball->direction.x = -1;
+    }
+    if (ball->position.x <= 0) {
+        ball->direction.x = 1;
+    }
+    if (ball->position.y + ball->size >= h) {
+        ball->direction.y = -1;
+    }
+    if (ball->position.y <= 0) {
+        ball->direction.y = 1;
+    }
+}
 
 void render_ball(SDL_Renderer *renderer, Ball *ball) {
     int result = SDL_SetRenderDrawColor(

@@ -4,7 +4,7 @@
 #include "./utils.h"
 #include <SDL2/SDL.h>
 
-#define PADDLE_STEP 30
+#define PADDLE_STEP 25
 
 typedef struct {
     int w, h;
