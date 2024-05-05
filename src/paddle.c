@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "./paddle.h"
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
@@ -8,7 +7,7 @@
 void create_paddle(Paddle *paddle, int w, int h) {
     paddle->w = 100;
     paddle->h = 10;
-    paddle->position.x = w / 2;
+    paddle->position.x = w / 2 - paddle->w / 2;
     paddle->position.y = h - 20;
     paddle->color.r = 0x00;
     paddle->color.g = 0x00;
@@ -26,13 +25,13 @@ void update_paddle(Paddle *paddle, int w) {
 }
 
 void render_paddle(SDL_Renderer *renderer, Paddle *paddle) {
-    int success = SDL_SetRenderDrawColor(
+    int result = SDL_SetRenderDrawColor(
             renderer, 
             paddle->color.r, 
             paddle->color.g, 
             paddle->color.b, 
             paddle->color.a);
-    if (success != 0) {
+    if (result != 0) {
         fprintf(stderr, "Error set draw color paddle: %s", SDL_GetError());
     }
     SDL_Rect rect = { 
@@ -41,8 +40,8 @@ void render_paddle(SDL_Renderer *renderer, Paddle *paddle) {
         .w = paddle->w,
         .h = paddle->h,
     };
-    success = SDL_RenderFillRect(renderer, &rect);
-    if (success != 0) {
+    result = SDL_RenderFillRect(renderer, &rect);
+    if (result != 0) {
         fprintf(stderr, "Error draw paddle: %s", SDL_GetError());
     }
 }

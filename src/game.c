@@ -1,21 +1,22 @@
-#include <SDL2/SDL_keycode.h>
-#include <SDL2/SDL_timer.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include "./game.h"
 #include "./paddle.h"
-
+#include "./ball.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
+#include <SDL2/SDL_timer.h>
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool running = false;
 int last_frame_time = 0;
 Paddle paddle;
+Ball ball;
 
 void init(void) {
     running = true;
@@ -42,6 +43,7 @@ void init(void) {
         running = false;
     }
     create_paddle(&paddle, SCREEN_WIDTH, SCREEN_HEIGHT);
+    create_ball(&ball, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void handle_input(void) {
@@ -74,6 +76,7 @@ void render(void) {
     SDL_RenderClear(renderer);
 
     render_paddle(renderer, &paddle);
+    render_ball(renderer, &ball);
 
     SDL_RenderPresent(renderer);
 }
