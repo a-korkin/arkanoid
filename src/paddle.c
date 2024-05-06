@@ -9,13 +9,18 @@ void create_paddle(Paddle *paddle, int w, int h) {
     paddle->h = 10;
     paddle->position.x = (float) w / 2 - (float) paddle->w / 2;
     paddle->position.y = h - 20;
+    paddle->direction.x = 0;
+    paddle->direction.y = 0;
     paddle->color.r = 0x00;
     paddle->color.g = 0x00;
     paddle->color.b = 0xFF;
     paddle->color.a = 0xFF;
 }
 
-void update_paddle(Paddle *paddle, int w) {
+void update_paddle(Paddle *paddle, int w, float delta_time) {
+    // paddle->position.x += paddle->direction.x;
+    // paddle->direction.x = 0;
+
     if (paddle->position.x <= 0) {
         paddle->position.x = 0;
     }

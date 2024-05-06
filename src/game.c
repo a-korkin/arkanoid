@@ -15,7 +15,6 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool running = false;
-bool start = false;
 int last_frame_time = 0;
 Paddle paddle;
 Ball ball;
@@ -59,7 +58,7 @@ void handle_input(void) {
         switch (event.key.keysym.sym) {
             case SDLK_RIGHT: paddle.position.x += PADDLE_STEP; break;
             case SDLK_LEFT: paddle.position.x -= PADDLE_STEP; break;
-            case SDLK_SPACE: ball.direction.y = -1; start = true; break;
+            case SDLK_SPACE: ball.direction.y = -1; ball.direction.x = 0; break;
         }
     }
 }
@@ -68,14 +67,12 @@ void check_collisions(void) {
     if (ball.position.y + ball.size >= paddle.position.y
         && ball.position.x + ball.size >= paddle.position.x
         && ball.position.x <= paddle.position.x + paddle.w) {
-        if (start) {
-            float paddle_center = paddle.position.x + (float) paddle.w / 2;
-            float ball_center = ball.position.x + (float) ball.size / 2;
-            float degree = (ball_center - paddle_center) + (float) paddle.w / 2;
-            double rad =  PI / 180;
-            ball.direction.x = -1 * cos(rad * degree);
-            ball.direction.y = -1 * sin(rad * degree);
-        }
+        float paddle_center = paddle.position.x + (float) paddle.w / 2;
+        float ball_center = ball.position.x + (float) ball.size / 2;
+        float degree = (ball_center - paddle_center) + (float) paddle.w / 2;
+        double rad =  PI / 180;
+        ball.direction.x = -1 * cos(rad * degree);
+        ball.direction.y = -1 * sin(rad * degree);
     }
 }
 
@@ -86,7 +83,7 @@ void update(void) {
     }
     float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
     last_frame_time = SDL_GetTicks();
-    update_paddle(&paddle, SCREEN_WIDTH);
+    update_paddle(&paddle, SCREEN_WIDTH, delta_time);
     update_ball(&ball, SCREEN_WIDTH, SCREEN_HEIGHT, delta_time);
     check_collisions();
 }
