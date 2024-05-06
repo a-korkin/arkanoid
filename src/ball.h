@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include "./utils.h"
 
-#define BALL_SPEED 200
+#define BALL_SPEED 300
 
 typedef struct {
     int size;

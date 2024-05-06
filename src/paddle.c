@@ -5,9 +5,9 @@
 #include <SDL2/SDL_render.h>
 
 void create_paddle(Paddle *paddle, int w, int h) {
-    paddle->w = 100;
+    paddle->w = 180;
     paddle->h = 10;
-    paddle->position.x = w / 2 - paddle->w / 2;
+    paddle->position.x = (float) w / 2 - (float) paddle->w / 2;
     paddle->position.y = h - 20;
     paddle->color.r = 0x00;
     paddle->color.g = 0x00;
@@ -34,13 +34,13 @@ void render_paddle(SDL_Renderer *renderer, Paddle *paddle) {
     if (result != 0) {
         fprintf(stderr, "Error set draw color paddle: %s", SDL_GetError());
     }
-    SDL_Rect rect = { 
+    SDL_FRect rect = { 
         .x = paddle->position.x, 
         .y = paddle->position.y,
         .w = paddle->w,
         .h = paddle->h,
     };
-    result = SDL_RenderFillRect(renderer, &rect);
+    result = SDL_RenderFillRectF(renderer, &rect);
     if (result != 0) {
         fprintf(stderr, "Error draw paddle: %s", SDL_GetError());
     }

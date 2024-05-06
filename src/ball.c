@@ -5,7 +5,7 @@
 
 void create_ball(Ball *ball, int w, int h) {
     ball->size = 10;
-    ball->position.x = w / 2 - ball->size / 2;
+    ball->position.x = (float) w / 2 - (float) ball->size / 2;
     ball->position.y = h - 30;
     ball->color.r = 0xFF;
     ball->color.g = 0x00;
@@ -40,13 +40,13 @@ void render_ball(SDL_Renderer *renderer, Ball *ball) {
         fprintf(stderr, "Error set draw color ball: %s", SDL_GetError());
     }
 
-    SDL_Rect rect = { 
+    SDL_FRect rect = { 
         .x = ball->position.x, 
         .y = ball->position.y,
         .w = ball->size,
         .h = ball->size,
     };
-    result = SDL_RenderFillRect(renderer, &rect);
+    result = SDL_RenderFillRectF(renderer, &rect);
     if (result != 0) {
         fprintf(stderr, "Error draw paddle: %s", SDL_GetError());
     }

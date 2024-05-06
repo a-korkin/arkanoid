@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 #include "./game.h"
 #include "./paddle.h"
 #include "./ball.h"
@@ -65,10 +66,15 @@ void handle_input(void) {
 
 void check_collisions(void) {
     if (ball.position.y + ball.size >= paddle.position.y
-        && ball.position.x >= paddle.position.x
-        && ball.position.x + ball.size <= paddle.position.x + paddle.w) {
+        && ball.position.x + ball.size >= paddle.position.x
+        && ball.position.x <= paddle.position.x + paddle.w) {
         if (start) {
-            ball.direction.y *= -1;
+            float paddle_center = paddle.position.x + (float) paddle.w / 2;
+            float ball_center = ball.position.x + (float) ball.size / 2;
+            float degree = (ball_center - paddle_center) + (float) paddle.w / 2;
+            double rad =  PI / 180;
+            ball.direction.x = -1 * cos(rad * degree);
+            ball.direction.y = -1 * sin(rad * degree);
         }
     }
 }

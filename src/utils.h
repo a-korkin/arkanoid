@@ -2,7 +2,7 @@
 #define UTILS_H
 
 typedef struct {
-    int x, y;
+    float x, y;
 } Vec2;
 
 typedef struct {
