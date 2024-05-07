@@ -4,6 +4,7 @@
 #include "./game.h"
 #include "./paddle.h"
 #include "./ball.h"
+#include "./obstacle.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
@@ -18,6 +19,7 @@ bool running = false;
 int last_frame_time = 0;
 Paddle paddle;
 Ball ball;
+Obstacle *obstacle = NULL;
 
 void init(void) {
     running = true;
@@ -43,8 +45,10 @@ void init(void) {
         fprintf(stderr, "Error creating renderer: %s", SDL_GetError());
         running = false;
     }
+    
     create_paddle(&paddle, SCREEN_WIDTH, SCREEN_HEIGHT);
     create_ball(&ball, SCREEN_WIDTH, SCREEN_HEIGHT);
+    obstacle = create_obstacle(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void handle_input(void) {
@@ -94,6 +98,7 @@ void render(void) {
 
     render_paddle(renderer, &paddle);
     render_ball(renderer, &ball);
+    render_obstacle(renderer, obstacle);
 
     SDL_RenderPresent(renderer);
 }
