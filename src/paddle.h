@@ -10,7 +10,7 @@ typedef struct {
     int w, h;
     Vec2 position;
     Vec2 direction;
-    Color color;
+    SDL_Color color;
 } Paddle;
 
 void create_paddle(Paddle *paddle, int w, int h);

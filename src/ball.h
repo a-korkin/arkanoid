@@ -10,7 +10,7 @@ typedef struct {
     int size;
     Vec2 position;
     Vec2 direction;
-    Color color;
+    SDL_Color color;
 } Ball;
 
 void create_ball(Ball *ball, int w, int h);
