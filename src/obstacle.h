@@ -12,7 +12,7 @@ typedef struct {
     SDL_Color color;
 } Obstacle;
 
-Obstacle *create_obstacle(int w, int h);
+Obstacle *generate_obstacles(int screen_width, int screen_height);
 void update_obstacle(Obstacle *obstacle, int w, int h, float delta_time);
 void render_obstacle(SDL_Renderer *renderer, Obstacle *obstacle);
 

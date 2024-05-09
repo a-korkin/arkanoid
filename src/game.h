@@ -6,6 +6,7 @@
 #define FPS 60
 #define FRAME_TARGET_TIME (1000 / FPS)
 #define PI 3.14159265
+#define OBSTACLE_COUNT 69
 
 void init(void);
 void loop(void);

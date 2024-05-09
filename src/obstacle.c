@@ -1,4 +1,5 @@
 #include "./obstacle.h"
+#include "game.h"
 #include "utils.h"
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_rect.h>
@@ -6,18 +7,39 @@
 #include <SDL2/SDL_surface.h>
 #include <stdio.h>
 
-Obstacle *create_obstacle(int w, int h) {
-    Obstacle *obstacle = (Obstacle *) malloc(sizeof(Obstacle));
-    if (obstacle == NULL) {
-        fprintf(stderr, "Error allocation space for obstacle");
+Obstacle *generate_obstacles(int screen_width, int screen_height) {
+    Obstacle *obstacles = (Obstacle *) malloc(sizeof(Obstacle) * OBSTACLE_COUNT);
+    if (obstacles == NULL) {
+        fprintf(stderr, "Error allocation space for obstacles");
     }
-    obstacle->w = 30;
-    obstacle->h = 10;
-    obstacle->show = true;
-    obstacle->color = (SDL_Color) { .r = 0x00, .g = 0xFF, .b = 0x00, .a = 0xFF };
-    obstacle->position = (Vec2) { .x = 50.0f, .y = 50.0f };
+    int width = 30;
+    int height = 20;
+    int gap = 5;
+    int row = 1;
+    int count = 0;
 
-    return obstacle;
+    for (int i = 0; i < OBSTACLE_COUNT; i++) {
+        (obstacles + i)->w = width;
+        (obstacles + i)->h = height;
+        (obstacles + i)->show = true;
+        (obstacles + i)->color = (SDL_Color) { 
+            .r = 0x00, .g = 0xFF, .b = 0x00, .a = 0xFF 
+        };
+
+        int pos_x = (width + gap) * count;
+        if (pos_x >= screen_width) {
+            pos_x = 0;
+            count = 0;
+            row++;
+        }
+        int pos_y = (height + gap) * row;
+        (obstacles + i)->position = (Vec2) {
+            .x = (float) pos_x,
+            .y = (float) pos_y 
+        };
+        count++;
+    }
+    return obstacles;
 }
 
 void update_obstacle(Obstacle *obstacle, int w, int h, float delta_time) {}

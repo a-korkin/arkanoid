@@ -19,7 +19,7 @@ bool running = false;
 int last_frame_time = 0;
 Paddle paddle;
 Ball ball;
-Obstacle *obstacle = NULL;
+Obstacle *obstacles = NULL;
 
 void init(void) {
     running = true;
@@ -48,7 +48,11 @@ void init(void) {
     
     create_paddle(&paddle, SCREEN_WIDTH, SCREEN_HEIGHT);
     create_ball(&ball, SCREEN_WIDTH, SCREEN_HEIGHT);
-    obstacle = create_obstacle(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    obstacles = generate_obstacles(SCREEN_WIDTH, SCREEN_HEIGHT);
+    if (obstacles == NULL) {
+        running = false;
+    }
 }
 
 void handle_input(void) {
@@ -78,6 +82,20 @@ void check_collisions(void) {
         ball.direction.x = -1 * cos(rad * degree);
         ball.direction.y = -1 * sin(rad * degree);
     }
+    
+    for (int i = 0; i < OBSTACLE_COUNT; i++) {
+        if (!(obstacles + i)->show) {
+            continue;
+        }
+
+        if (ball.position.x >= (obstacles + i)->position.x 
+            && ball.position.x + ball.size <= (obstacles + i)->position.x + (obstacles + i)->w
+            && ball.position.y <= (obstacles + i)->position.y + (obstacles + i)->h
+            && ball.position.y >= (obstacles + i)->position.y) {
+            (obstacles + i)->show = false;
+            ball.direction.y *= -1; 
+        }
+    }
 }
 
 void update(void) {
@@ -98,7 +116,11 @@ void render(void) {
 
     render_paddle(renderer, &paddle);
     render_ball(renderer, &ball);
-    render_obstacle(renderer, obstacle);
+    for (int i = 0; i < OBSTACLE_COUNT; i++) {
+        if ((obstacles + i)->show) {
+            render_obstacle(renderer, obstacles + i);
+        }
+    }
 
     SDL_RenderPresent(renderer);
 }
@@ -112,6 +134,7 @@ void loop(void) {
 }
 
 void quit(void) {
+    free(obstacles);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
